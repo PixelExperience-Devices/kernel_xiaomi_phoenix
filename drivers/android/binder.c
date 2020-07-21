@@ -93,8 +93,10 @@ static struct dentry *binder_debugfs_dir_entry_root;
 static struct dentry *binder_debugfs_dir_entry_proc;
 static atomic_t binder_last_id;
 
+#ifdef CONFIG_DEBUG_FS
 static int proc_show(struct seq_file *m, void *unused);
 DEFINE_SHOW_ATTRIBUTE(proc);
+#endif
 
 /* This is only defined in include/asm-arm/sizes.h */
 #ifndef SZ_1K
@@ -5234,7 +5236,7 @@ static int binder_open(struct inode *nodp, struct file *filp)
 	mutex_lock(&binder_procs_lock);
 	hlist_add_head(&proc->proc_node, &binder_procs);
 	mutex_unlock(&binder_procs_lock);
-
+#ifdef	CONFIG_DEBUG_FS
 	if (binder_debugfs_dir_entry_proc) {
 		char strbuf[11];
 
@@ -5280,7 +5282,7 @@ static int binder_open(struct inode *nodp, struct file *filp)
 			}
 		}
 	}
-
+#endif
 	return 0;
 }
 
@@ -6118,12 +6120,11 @@ static int __init binder_init(void)
 
 	atomic_set(&binder_transaction_log.cur, ~0U);
 	atomic_set(&binder_transaction_log_failed.cur, ~0U);
-
 	binder_debugfs_dir_entry_root = debugfs_create_dir("binder", NULL);
 	if (binder_debugfs_dir_entry_root)
 		binder_debugfs_dir_entry_proc = debugfs_create_dir("proc",
 						 binder_debugfs_dir_entry_root);
-
+#ifdef CONFIG_DEBUG_FS
 	if (binder_debugfs_dir_entry_root) {
 		debugfs_create_file("state",
 				    0444,
@@ -6151,6 +6152,7 @@ static int __init binder_init(void)
 				    &binder_transaction_log_failed,
 				    &binder_transaction_log_fops);
 	}
+#endif
 
 	if (!IS_ENABLED(CONFIG_ANDROID_BINDERFS) &&
 	    strcmp(binder_devices_param, "") != 0) {
