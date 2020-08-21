@@ -136,6 +136,8 @@ out
 error.log
 
 # Ignore compilers
-clang
-gcc
+clang-llvm
+AnyKernel3
+scripts/ufdt/libufdt
 gcc32
+gcc64
