@@ -71,7 +71,7 @@ PTTG=1
 	fi
 
 # Generate a full DEFCONFIG prior building. 1 is YES | 0 is NO(default)
-DEF_REG=0
+DEF_REG=1
 
 # Build dtbo.img (select this only if your source has support to building dtbo.img)
 # 1 is YES | 0 is NO(default)
@@ -322,12 +322,25 @@ release() {
 	msg "|| Uploaded $ZIP_FINAL on SourceForge ||"
 }
 
+90_hz_patch() {
+	msg "|| Applying 90 Hz Patch ||"
+	git apply 90hz.patch
+	ZIPNAME="StormBreaker-$VERSION-90Hz"
+}
 clone
 exports
 build_kernel
 if [ $RELEASE = 1 ]
 then
 	release
+fi
+90_hz_patch
+clone
+exports
+build_kernel
+if [ $RELEASE = 1 ]
+then
+        release
 fi
 
 if [ $LOG_DEBUG = "1" ]
