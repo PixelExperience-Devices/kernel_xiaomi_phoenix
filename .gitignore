@@ -130,3 +130,6 @@ kernel/configs/android-*.cfg
 
 # Ignore compiled objects
 obj
+
+# Error log
+error.log
