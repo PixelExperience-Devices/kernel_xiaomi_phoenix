@@ -37,7 +37,7 @@ err() {
 KERNEL_DIR=$PWD
 
 # Kernel Version
-VERSION="4.0"
+VERSION="4.1"
 
 # Sign Kernel or not
 SIGN=1
@@ -322,25 +322,12 @@ release() {
 	msg "|| Uploaded $ZIP_FINAL on SourceForge ||"
 }
 
-90_hz_patch() {
-	msg "|| Applying 90 Hz Patch ||"
-	git apply 90hz.patch
-	ZIPNAME="StormBreaker-$VERSION-90Hz"
-}
 clone
 exports
 build_kernel
 if [ $RELEASE = 1 ]
 then
 	release
-fi
-90_hz_patch
-clone
-exports
-build_kernel
-if [ $RELEASE = 1 ]
-then
-        release
 fi
 
 if [ $LOG_DEBUG = "1" ]
